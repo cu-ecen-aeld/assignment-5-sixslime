@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# cd into modules directory to find .ko files:
+# ~ explicitly not using modprobe because i assume we arent supposed to?
+for d in /lib/modules/$(uname -r)/extra /lib/modules/$(uname -r)/updates; do
+    [ -d "$d" ] && cd "$d" && break
+done
+
+case "$1" in
+    start)
+        echo "Loading scull..."
+        /usr/bin/scull_load
+        echo "Loading faulty..."
+        /usr/bin/module_load faulty
+        echo "Loading hello via modprobe..."
+        modprobe hello
+        echo "MODULE LOAD END"
+        ;;
+    stop)
+        echo "Unloading scull..."
+        /usr/bin/scull_unload
+        echo "Unloading faulty..."
+        /usr/bin/module_unload faulty
+        echo "Unloading hello via modprobe..."
+        modprobe -r hello
+        echo "MODULE UNLOAD END"
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0
