@@ -6,6 +6,9 @@ for d in /lib/modules/$(uname -r)/extra /lib/modules/$(uname -r)/updates; do
     [ -d "$d" ] && cd "$d" && break
 done
 
+moddir="$PWD"
+echo Module directory: $moddir
+
 case "$1" in
     start)
         echo "Loading scull..."
